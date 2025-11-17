@@ -1,8 +1,8 @@
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 
-from app.api.routes import auth, user
-from app.db import Base, engine
+from backend.app.api.routes import auth, user
+from backend.app.db import Base, engine
 
 
 Base.metadata.create_all(bind=engine)

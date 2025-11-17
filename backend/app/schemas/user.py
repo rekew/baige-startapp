@@ -24,7 +24,7 @@ class UserUpdate(BaseModel):
 	last_name: Optional[str] = None
 	email: Optional[str] = None
 	city: Optional[City] = None
-	password: Optional[str] = None
+	phone_number: Optional[Annotated[PhoneNumber, "KZ"]] = None
 
 class UserResponse(UserBase):
 	id: int

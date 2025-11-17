@@ -1,3 +1,4 @@
+import hashlib
 from typing import Optional, List
 
 from sqlalchemy.orm import Session
@@ -30,11 +31,12 @@ class UserRepository:
 	# POST Create User
 	def create (self, user: UserCreate) -> User:
 		hashed_password = get_password_hash (user.password)
+		phone_normalized = str (user.phone_number).replace ('tel:', '').replace ('-', '').replace (' ', '')
 		db_user = User (
 			first_name = user.first_name,
 			last_name = user.last_name,
 			email = user.email,
-			phone_number = user.phone_number,
+			phone_number = phone_normalized,
 			password_hash = hashed_password,
 			date_of_birth = user.date_of_birth,
 			city = user.city,
@@ -62,11 +64,12 @@ class UserRepository:
 
 	# PATCH User password
 	def update_password (self, user_id: int, password: UserUpdatePassword) -> Optional[User] | str:
-		db_user = self.db.query (User).filter (User.id == user_id).first ()
+		db_user = self.db.query (User).filter (User.id == user_id).first()
+		password_hashed = hashlib.sha256 (password.old_password.encode ('utf-8')).hexdigest ()
 		if not db_user:
 			return None
 
-		if not pwd_context.verify (password.old_password, db_user.password_hash):
+		if not pwd_context.verify (password_hashed, db_user.password_hash):
 			return "wrong_old_password"
 
 		if password.new_password != password.confirm_password:

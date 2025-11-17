@@ -10,6 +10,8 @@ alembic==1.12.1
 # Pydantic
 pydantic==2.5.0
 pydantic-settings==2.1.0
+phonenumbers==9.0.18
+pydantic-extra-types==2.1.0
 
 # Security
 python-jose[cryptography]==3.3.0
