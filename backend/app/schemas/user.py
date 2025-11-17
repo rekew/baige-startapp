@@ -1,15 +1,17 @@
 from datetime import date, datetime
-from typing import Optional
+from typing import Annotated, Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
+from pydantic_extra_types.phone_numbers import PhoneNumber
 
 from backend.app.models.enums import City
 
 
 class UserBase(BaseModel):
 	first_name: str
-	second_name: str
+	last_name: str
 	email: str
+	phone_number: Annotated[PhoneNumber, "KZ"]
 	date_of_birth: date
 	city: City
 
@@ -19,7 +21,7 @@ class UserCreate(UserBase):
 
 class UserUpdate(BaseModel):
 	first_name: Optional[str] = None
-	second_name: Optional[str] = None
+	last_name: Optional[str] = None
 	email: Optional[str] = None
 	city: Optional[City] = None
 	password: Optional[str] = None
@@ -35,6 +37,15 @@ class UserResponse(UserBase):
 
 class UserInDB(UserResponse):
 	password_hash: str
+
+class UserUpdatePassword(BaseModel):
+	old_password: str
+	new_password: str
+	confirm_password: str
+
+class UserLogin(BaseModel):
+	email: str
+	password: str
 
 
 
