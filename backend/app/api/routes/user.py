@@ -1,7 +1,7 @@
 from typing import List
 
 from fastapi import APIRouter, Depends, HTTPException, status as http_status
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from backend.app.api.deps import get_current_user
 from backend.app.db import get_db
@@ -14,7 +14,7 @@ router = APIRouter(prefix="/user")
 
 # GET Routers
 @router.get("/all", response_model=List[UserResponse])
-def get_all_users_endpoint(db: Session = Depends(get_db)):
+def get_all_users_endpoint(db: AsyncSession   = Depends(get_db)):
     user_repo = UserRepository(db)
     users = user_repo.get_all()
     return users
@@ -26,7 +26,7 @@ def get_my_profile(current_user: User = Depends(get_current_user)):
 
 
 @router.get("/{user_id}", response_model=UserResponse)
-def get_user_by_id_endpoint(user_id: int, db: Session = Depends(get_db)):
+def get_user_by_id_endpoint(user_id: int, db: AsyncSession  = Depends(get_db)):
     user_repo = UserRepository(db)
     user = user_repo.get_by_id(user_id)
     if user is None:
@@ -38,7 +38,7 @@ def get_user_by_id_endpoint(user_id: int, db: Session = Depends(get_db)):
 
 
 @router.get("/email/{email}", response_model=UserResponse)
-def get_user_by_email_endpoint(email: str, db: Session = Depends(get_db)):
+def get_user_by_email_endpoint(email: str, db: AsyncSession  = Depends(get_db)):
     user_repo = UserRepository(db)
     user = user_repo.get_by_email(email)
     if user is None:
@@ -49,7 +49,7 @@ def get_user_by_email_endpoint(email: str, db: Session = Depends(get_db)):
 
 
 @router.get("/phone/{phone}", response_model=UserResponse)
-def get_user_by_phone_endpoint(phone: str, db: Session = Depends(get_db)):
+def get_user_by_phone_endpoint(phone: str, db: AsyncSession  = Depends(get_db)):
     user_repo = UserRepository(db)
     user = user_repo.get_by_phone_number(phone)
     if user is None:
@@ -64,7 +64,7 @@ def get_user_by_phone_endpoint(phone: str, db: Session = Depends(get_db)):
 def update_user_endpoint(
     user_id: int,
     user: UserUpdate,
-    db: Session = Depends(get_db),
+    db: AsyncSession  = Depends(get_db),
     _: User = Depends(get_current_user),
 ):
     user_repo = UserRepository(db)
@@ -90,7 +90,7 @@ def update_user_endpoint(
 def update_user_password_endpoint(
     user_id: int,
     password: UserUpdatePassword,
-    db: Session = Depends(get_db),
+    db: AsyncSession  = Depends(get_db),
     _: User = Depends(get_current_user),
 ):
     user_repo = UserRepository(db)
@@ -120,7 +120,7 @@ def update_user_password_endpoint(
 
 # DELETE Routers
 @router.delete("/{user_id}", response_model=UserResponse)
-def delete_user_endpoint(user_id: int, db: Session = Depends(get_db)):
+def delete_user_endpoint(user_id: int, db: AsyncSession  = Depends(get_db)):
     user_repo = UserRepository(db)
     existing_user = user_repo.get_by_id(user_id)
     if existing_user is None:

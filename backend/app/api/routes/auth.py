@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, status as http_status
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from backend.app.api.deps import get_current_user
 from backend.app.core.security import verify_token
@@ -15,8 +15,7 @@ router = APIRouter(prefix="/auth")
 @router.post(
     "/register", response_model=UserResponse, status_code=http_status.HTTP_201_CREATED
 )
-def register_endpoint(user_create: UserCreate, db: Session = Depends(get_db)):
-    auth_service = AuthService(db)
+def register_endpoint(user_create: UserCreate, db: AsyncSession  = Depends(get_db)):
     user_repository = UserRepository(db)
     existing_user = user_repository.get_by_email(user_create.email)
     if existing_user:
@@ -29,7 +28,7 @@ def register_endpoint(user_create: UserCreate, db: Session = Depends(get_db)):
 
 
 @router.post("/login", response_model=Token)
-def login_endpoint(login_data: UserLogin, db: Session = Depends(get_db)):
+def login_endpoint(login_data: UserLogin, db: AsyncSession  = Depends(get_db)):
     auth_service = AuthService(db)
 
     user = auth_service.authenticate_user(login_data.email, login_data.password)
@@ -44,7 +43,7 @@ def login_endpoint(login_data: UserLogin, db: Session = Depends(get_db)):
 
 
 @router.post("/refresh", response_model=Token)
-def refresh_token_endpoint(refresh_token: str, db: Session = Depends(get_db)):
+def refresh_token_endpoint(refresh_token: str, db: AsyncSession  = Depends(get_db)):
     user_repository = UserRepository(db)
     auth_service = AuthService(db)
     email = verify_token(refresh_token, token_type="refresh")

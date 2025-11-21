@@ -1,7 +1,8 @@
 from datetime import date, datetime
 from typing import Annotated, Optional
 
-from pydantic import BaseModel, Field
+import phonenumbers
+from pydantic import BaseModel, Field, field_validator
 from pydantic_extra_types.phone_numbers import PhoneNumber
 
 from backend.app.models.enums import City
@@ -14,6 +15,11 @@ class UserBase(BaseModel):
     phone_number: Annotated[PhoneNumber, "KZ"]
     date_of_birth: date
     city: City
+
+    @field_validator ("phone_number", mode = "before")
+    def normalize_phone (cls, value):
+        num = phonenumbers.parse (value, "KZ")
+        return phonenumbers.format_number (num, phonenumbers.PhoneNumberFormat.E164)
 
 
 class UserCreate(UserBase):
