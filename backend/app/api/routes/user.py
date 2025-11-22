@@ -59,7 +59,7 @@ def get_user_by_phone_endpoint(phone: str, db: AsyncSession  = Depends(get_db)):
     return user
 
 
-# PUT Routers
+# PUT & PATCH Routers
 @router.patch("/{user_id}", response_model=UserResponse)
 def update_user_endpoint(
     user_id: int,
