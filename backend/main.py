@@ -1,17 +1,16 @@
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 
-from backend.app.api.routes import auth, user
-from backend.app.db import Base, engine
-
-
-Base.metadata.create_all(bind=engine)
+from app.api.routes import auth, user
 
 app = FastAPI(title="Baige App", version="0.0.1")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[
+        "http://localhost:9999",
+        "http://127.0.0.1:9999"
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

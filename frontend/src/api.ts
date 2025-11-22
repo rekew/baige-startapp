@@ -1,29 +1,30 @@
 import axios from "axios";
 
 interface User {
-  username: string;
-  password: string;
-  firstName: string;
-  surname: string;
+  first_name: string;
+  last_name: string;
   email: string;
-  phoneNumber: string;
+  phone_number: string;
+  date_of_birth: string; // Format: YYYY-MM-DD
+  city: string;
+  password: string;
 }
 
-interface userLogin {
-  username: string;
+interface UserLogin {
+  email: string;
   password: string;
 }
 
 const api = axios.create({
-  baseURL: "http://localhost:4000",
+  baseURL: "http://localhost:8008",
   withCredentials: true,
 });
 
 export const Api = {
   register: async (user: User) => {
-    return api.post("/register", user);
+    return api.post("/api/auth/register", user);
   },
-  login: async (user: userLogin) => {
-    return api.post("/login", user);
+  login: async (user: UserLogin) => {
+    return api.post("/api/auth/login", user);
   },
 };

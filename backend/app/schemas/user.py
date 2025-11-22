@@ -5,7 +5,7 @@ import phonenumbers
 from pydantic import BaseModel, Field, field_validator
 from pydantic_extra_types.phone_numbers import PhoneNumber
 
-from backend.app.models.enums import City
+from app.models.enums import City
 
 
 class UserBase(BaseModel):

@@ -4,9 +4,9 @@ from typing import Optional, List
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, update, delete
 
-from backend.app.core.security import get_password_hash, pwd_context
-from backend.app.models.user import User
-from backend.app.schemas.user import UserCreate, UserUpdate, UserUpdatePassword
+from app.core.security import get_password_hash, pwd_context
+from app.models.user import User
+from app.schemas.user import UserCreate, UserUpdate, UserUpdatePassword
 
 
 class UserRepository:
@@ -19,21 +19,21 @@ class UserRepository:
         return result.scalars().all()
 
     # GET User by ID
-    async def get_by_id(self, user_id: int) -> Optional[User]:
+    async def get_by_id(self, user_id: int) -> User | None:
         result = await self.db.execute(
             select(User).where(User.id == user_id)
         )
         return result.scalar_one_or_none()
 
     # GET User by Email
-    async def get_by_email(self, email: str) -> Optional[User]:
+    async def get_by_email(self, email: str) -> User | None:
         result = await self.db.execute(
             select(User).where(User.email == email)
         )
         return result.scalar_one_or_none()
 
     # GET User by phone number
-    async def get_by_phone_number(self, phone: str) -> Optional[User]:
+    async def get_by_phone_number(self, phone: str) -> User | None:
         result = await self.db.execute(
             select(User).where(User.phone_number == phone)
         )
@@ -67,7 +67,7 @@ class UserRepository:
         return db_user
 
     # PUT the User
-    async def update(self, user_id: int, user_update: UserUpdate) -> Optional[User]:
+    async def update(self, user_id: int, user_update: UserUpdate) -> User | None:
         # Получаем пользователя
         result = await self.db.execute(
             select(User).where(User.id == user_id)
@@ -89,7 +89,7 @@ class UserRepository:
     # PATCH User password
     async def update_password(
         self, user_id: int, password: UserUpdatePassword
-    ) -> Optional[User] | str:
+    ) -> User | None | str:
 
         result = await self.db.execute(
             select(User).where(User.id == user_id)

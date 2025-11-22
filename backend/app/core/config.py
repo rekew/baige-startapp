@@ -19,7 +19,7 @@ class Settings(BaseSettings):
         return f"postgresql://{self.DB_USERNAME}:{self.DB_PASSWORD}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
 
     class Config:
-        env_file = "backend/.env"
+        env_file = ".env"
         case_sensitive = True
 
 
