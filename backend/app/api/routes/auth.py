@@ -1,13 +1,14 @@
 from fastapi import APIRouter, Depends, HTTPException, status as http_status
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import Session
 
-from app.api.deps import get_current_user
-from app.core.security import verify_token
-from app.db import get_db
-from app.schemas.token import Token
-from app.schemas.user import UserCreate, UserLogin, UserResponse
-from app.services.auth_service import AuthService
-from app.repositories.user import UserRepository
+from backend.app.api.deps import get_current_user
+from backend.app.core.security import verify_token
+from backend.app.db.session import get_db
+from backend.app.schemas.token import Token
+from backend.app.schemas.user import UserCreate, UserLogin, UserResponse
+from backend.app.services.auth_service import AuthService
+from backend.app.repositories.user import UserRepository
 
 router = APIRouter(prefix="/auth")
 
@@ -55,7 +56,7 @@ async def refresh_token_endpoint(refresh_token: str, db: AsyncSession  = Depends
             headers={"WWW-Authenticate": "Bearer"},
         )
 
-    user = user_repository.get_by_email(email)
+    user = await user_repository.get_by_email(email)
     if user is None:
         raise HTTPException(
             status_code=http_status.HTTP_401_UNAUTHORIZED,
@@ -67,5 +68,5 @@ async def refresh_token_endpoint(refresh_token: str, db: AsyncSession  = Depends
 
 
 @router.get("/me", response_model=UserResponse)
-def get_me_endpoint(current_user: UserResponse = Depends(get_current_user)):
+async def get_me_endpoint(current_user: UserResponse = Depends(get_current_user)):
     return current_user

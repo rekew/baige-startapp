@@ -1,17 +1,18 @@
 from fastapi import Depends, HTTPException, status as http_status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import select
 
-from app.core.security import verify_token
-from app.db import get_db
-from app.models.user import User
+from backend.app.core.security import verify_token
+from backend.app.db.session import get_db
+from backend.app.models.user import User
 
 security = HTTPBearer()
 
 
-def get_current_user(
-    credentials: HTTPAuthorizationCredentials = Depends(security),
-    db: Session = Depends(get_db),
+async def get_current_user(
+        credentials: HTTPAuthorizationCredentials = Depends(security),
+        db: AsyncSession = Depends(get_db),
 ) -> User:
     token = credentials.credentials
     email = verify_token(token, token_type="access")
@@ -22,7 +23,9 @@ def get_current_user(
             headers={"WWW-Authenticate": "Bearer"},
         )
 
-    user = db.query(User).filter(User.email == email).first()
+    result = await db.execute(select(User).where(User.email == email))
+    user = result.scalar_one_or_none()
+
     if user is None:
         raise HTTPException(
             status_code=http_status.HTTP_404_NOT_FOUND,
@@ -32,7 +35,7 @@ def get_current_user(
     return user
 
 
-def get_current_active_user(current_user: User = Depends(get_current_user)) -> User:
+async def get_current_active_user(current_user: User = Depends(get_current_user)) -> User:
     if not current_user.is_active:
         raise HTTPException(
             status_code=http_status.HTTP_400_BAD_REQUEST, detail="Inactive user"

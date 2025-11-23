@@ -2,13 +2,13 @@ from typing import Optional
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
-from app.core.security import (
+from backend.app.core.security import (
     create_access_token,
     create_refresh_token,
     verify_password,
 )
-from app.models.user import User
-from app.schemas.token import Token
+from backend.app.models.user import User
+from backend.app.schemas.token import Token
 
 
 class AuthService:

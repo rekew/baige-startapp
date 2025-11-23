@@ -1,9 +1,21 @@
+from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 
-from app.api.routes import auth, user
+from backend.app.api.routes import user, auth
+from backend.app.db.base import Base
+from backend.app.db.session import engine
 
-app = FastAPI(title="Baige App", version="0.0.1")
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Создание таблиц при запуске (для async engine)
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
+    yield
+
+
+app = FastAPI(title="Baige App", version="0.0.1", lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
@@ -21,5 +33,5 @@ app.include_router(user.router, prefix="/api", tags=["Users"])
 
 
 @app.get("/")
-def root():
+async def root():
     return {"message": "Welcome to the Baige App API!"}

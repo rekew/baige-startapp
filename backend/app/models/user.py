@@ -9,8 +9,8 @@ from sqlalchemy import (
     Enum as SqlEnum,
 )
 
-from app.db.base import Base
-from app.models.enums import City
+from backend.app.db.base import Base
+from backend.app.models.enums import City
 
 
 class User(Base):

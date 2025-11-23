@@ -26,7 +26,7 @@ db-downgrade:
 	alembic downgrade -1
 
 run:
-	uvicorn main:app --reload --host 0.0.0.0 --port 8008
+	cd $(CURDIR) && uvicorn main:app --reload --host 0.0.0.0 --port 8008 --app-dir .
 
 clean:
 	find . -type d -name "__pycache__" -exec rm -rf {} +

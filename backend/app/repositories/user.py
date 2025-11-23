@@ -4,9 +4,9 @@ from typing import Optional, List
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, update, delete
 
-from app.core.security import get_password_hash, pwd_context
-from app.models.user import User
-from app.schemas.user import UserCreate, UserUpdate, UserUpdatePassword
+from backend.app.core.security import get_password_hash, pwd_context
+from backend.app.models.user import User
+from backend.app.schemas.user import UserCreate, UserUpdate, UserUpdatePassword
 
 
 class UserRepository:
