@@ -2,10 +2,10 @@ from datetime import date, datetime
 from typing import Annotated, Optional
 
 import phonenumbers
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, field_validator
 from pydantic_extra_types.phone_numbers import PhoneNumber
 
-from backend.app.models.enums import City
+from app.modules.basic.enums import City
 
 
 class UserBase(BaseModel):

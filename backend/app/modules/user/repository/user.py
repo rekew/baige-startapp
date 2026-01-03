@@ -1,12 +1,12 @@
 import hashlib
-from typing import Optional, List
+from typing import Sequence
 
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, update, delete
+from sqlalchemy import select
 
-from backend.app.core.security import get_password_hash, pwd_context
-from backend.app.models.user import User
-from backend.app.schemas.user import UserCreate, UserUpdate, UserUpdatePassword
+from app.core.security import get_password_hash, pwd_context
+from app.modules.user.model.user import User
+from app.modules.user.schemas.user import UserCreate, UserUpdate, UserUpdatePassword
 
 
 class UserRepository:
@@ -14,7 +14,7 @@ class UserRepository:
         self.db = db
 
     # GET all Users
-    async def get_all(self) -> List[User]:
+    async def get_all(self) -> Sequence[User]:
         result = await self.db.execute(select(User))
         return result.scalars().all()
 

@@ -5,13 +5,9 @@ from sqlalchemy import pool
 
 from alembic import context
 
-from backend.app.db.base import Base
-from backend.app.models.user import User
-
-from dotenv import load_dotenv
-import os
-
-load_dotenv()
+from app.db.base import Base
+from app.modules.user.model.user import User
+from app.core.config import settings
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -47,13 +43,7 @@ def run_migrations_offline() -> None:
 
     """
 
-    DB_HOST = os.getenv('DB_HOST')
-    DB_PORT = os.getenv('DB_PORT')
-    DB_USERNAME = os.getenv('DB_USERNAME')
-    DB_PASSWORD = os.getenv('DB_PASSWORD')
-    DB_NAME = os.getenv('DB_NAME')
-
-    url = f"postgresql+psycopg2://{DB_USERNAME}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+    url = settings.DATABASE_URL.replace("postgresql://", "postgresql+psycopg2://")
 
     config.set_main_option("sqlalchemy.url", url)
 
@@ -76,13 +66,7 @@ def run_migrations_online() -> None:
 
     """
 
-    DB_HOST = os.getenv('DB_HOST')
-    DB_PORT = os.getenv('DB_PORT')
-    DB_USERNAME = os.getenv('DB_USERNAME')
-    DB_PASSWORD = os.getenv('DB_PASSWORD')
-    DB_NAME = os.getenv('DB_NAME')
-
-    url = f"postgresql+psycopg2://{DB_USERNAME}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+    url = settings.DATABASE_URL.replace("postgresql://", "postgresql+psycopg2://")
 
     config.set_main_option("sqlalchemy.url", url)
 

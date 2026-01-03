@@ -1,17 +1,14 @@
-from asyncio.sslproto import SSLAgainErrors
-
 from fastapi import APIRouter, Depends, HTTPException, status as http_status, Response
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from backend.app.api.deps import get_current_user
-from backend.app.core.security import verify_token
-from backend.app.db.session import get_db
-from backend.app.schemas.token import Token
-from backend.app.schemas.user import UserCreate, UserLogin, UserResponse
-from backend.app.services.auth_service import AuthService
-from backend.app.repositories.user import UserRepository
+from app.api.deps import get_current_user
+from app.core.security import verify_token
+from app.db.session import get_db
+from app.modules.user.schemas.user import UserCreate, UserLogin, UserResponse
+from app.modules.user.service.auth_service import AuthService
+from app.modules.user.repository.user import UserRepository
 
-router = APIRouter(prefix="/auth")
+router = APIRouter(prefix="/auth", tags=["Authentication"])
 
 
 @router.post(

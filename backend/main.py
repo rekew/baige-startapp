@@ -2,8 +2,9 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 
-from backend.app.api.routes import user, auth
-from backend.app.db.session import engine
+from app.modules.admin.api import admin
+from app.modules.user.api import auth, user
+from app.db.session import engine
 
 
 @asynccontextmanager
@@ -27,8 +28,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(auth.router, prefix="/api", tags=["Authentication"])
-app.include_router(user.router, prefix="/api", tags=["Users"])
+app.include_router(auth.router, prefix="/api")
+app.include_router(user.router, prefix="/api")
+app.include_router(admin.router, prefix="/api")
 
 
 @app.get("/")
